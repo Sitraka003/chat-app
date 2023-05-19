@@ -5,3 +5,7 @@
 :root {
     overflow: hidden;
 }
+
+.sidebar-body {
+    overflow: scroll;
+}
