@@ -3,7 +3,7 @@ import Messages from "@/types/messages"
 import Users from "@/types/users"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const GetChannelById = () => {
     const router = useRouter()
@@ -11,17 +11,25 @@ const GetChannelById = () => {
     const [usersChannel, setUsersChannel] = useState<Users[]>()
     const [messageList, setMessageList] = useState<Messages[]>()
     const [currentChannel, setCurrentChannel] = useState<Channels>()
-    const handleLoad = async() => {
-        try {
-            const resChannel = await axios.get(`http://localhost/channel/${channel_id}`)
-
-            if(resChannel.status === 200){
-                setCurrentChannel(resChannel.data)
+    useEffect(() => {
+        const fetchData = async() => {
+            try {
+                const resChannel = await axios.get(`http://127.0.0.1:8080/channel/${channel_id}`,{
+                    headers:{
+                      Authorization:`Bearer ${localStorage.getItem("tokken")}`,
+                      AccessControlAllowOrigin: "http://127.0.0.1:8080"
+                    }
+                  })
+    
+                if(resChannel.status === 200){
+                    setCurrentChannel(resChannel.data)
+                }
+            } catch (error) {
+                console.log(error)
             }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+        };
+        fetchData();
+    },[])
     return(
         <>
         <div className="flex flex-col w-full h-screen">

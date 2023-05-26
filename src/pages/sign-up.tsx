@@ -10,6 +10,8 @@ const Signup = () => {
     const [username, setUsername] = useState<string>()
     const [password, setPassword] = useState<string>()
     const [confirmPassword, setConfirmPassword] = useState<string>()
+    const [bio, setBio] = useState<string>()
+    const [email, setEmail] = useState<string>()
     const router = useRouter()
     const {
         register,
@@ -18,12 +20,12 @@ const Signup = () => {
     } = useForm({
         resolver: yupResolver(signupSchema)
     })
-    const onSubmit = async (data: { name: string,email: string; password: string; confirmpassword: string }) => {
+    const onSubmit = async (data: { name: string,email: string; password: string; bio: string }) => {
         try {
-          const response = await axios.post("http://localhost/users", data);
+          const response = await axios.post("http://127.0.0.1:8080/users", data);
     
-          if (response.status === 200) {
-            const { token } = response.data;
+          if (response.status >= 200) {
+            const token = response.data.user.token
             localStorage.setItem("token", token);
             router.push("/profile");
           } else {
@@ -38,7 +40,12 @@ const Signup = () => {
             <form className='flex flex-col border-4 border-gray-500 px-5 py-7 w-4/12 h-50 rounded-lg shadow-2xl'
                 onSubmit={
                     handleSubmit(
-                        () => onSubmit
+                        () => onSubmit({
+                            "email": `${email}`,
+                            "password": `${password}`,
+                            "name": `${username}`,
+                            "bio": `${bio}`
+                        })
                     )
                 }
             >
@@ -50,6 +57,12 @@ const Signup = () => {
                     <input className='rounded-md hover:border-2 hover:border-blue-500'
                         type='text'
                         {...register("name")}
+                        value={username}
+                        onChange={
+                            (e) => {
+                                setUsername(e.target.value)
+                            }
+                        }
                     />
                     {errors.name && <ErrorMessage message={errors.name.message} />}
                 </div>
@@ -58,10 +71,10 @@ const Signup = () => {
                     <input className='rounded-md hover:border-2 hover:border-blue-500' 
                         type='email'
                         {...register("email")}
-                        value={username}
+                        value={email}
                         onChange={
                             (e) => {
-                                setUsername(e.target.value)
+                                setEmail(e.target.value)
                             }
                         }
                     />
@@ -72,6 +85,12 @@ const Signup = () => {
                     <input className='rounded-md hover:border-2 hover:border-blue-500' 
                         type='text'
                         {...register("bio")}
+                        value={bio}
+                        onChange={
+                            (e) => {
+                                setBio(e.target.value)
+                            }
+                        }
                     />
                     {errors.bio && <ErrorMessage message={errors.bio.message} />}
                 </div>
