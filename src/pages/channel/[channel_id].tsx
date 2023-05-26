@@ -13,7 +13,12 @@ const GetChannelById = () => {
     const [currentChannel, setCurrentChannel] = useState<Channels>()
     const handleLoad = async() => {
         try {
-            const resChannel = await axios.get(`http://localhost/channel/${channel_id}`)
+            const resChannel = await axios.get(`http://127.0.0.1:8080/channel/${channel_id}`,{
+                headers:{
+                  Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJlbGluLm1hc2tAdGVzdC5jb20iLCJpYXQiOjE2ODM2MjA3NDZ9.IDnn96docIvGiZUZaC6rt8yWLYfAyqrFMX4oBtsHUog',
+                  AccessControlAllowOrigin: "http://127.0.0.1:8080"
+                }
+              })
 
             if(resChannel.status === 200){
                 setCurrentChannel(resChannel.data)

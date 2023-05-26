@@ -10,5 +10,4 @@ export const signupSchema = object().shape({
     email: string().email("Invalide email address").required("Email is required"),
     bio: string(),
     password: string().required("Password is required"),
-    confirmpassword: string().required("Confirm your password")
 })

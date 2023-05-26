@@ -2,53 +2,65 @@ import Channels from "@/types/channels"
 import Users from "@/types/users"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const Profile = () => {
     const router = useRouter()
-    const [channelList, setChannelList] = useState<Channels[]>()
-    const [userList, setUserList] = useState<Users[]>()
-    const [currentUser, setCurrentUser] = useState<Users>()
-    const handleLoad = async () => {
-        // Get current user
-        try {
-            const resCurrentUser = await axios.get("http://localhost/user/")
-            if(resCurrentUser.status === 200) {
-                setCurrentUser(resCurrentUser.data)
+    const [channelList, setChannelList] = useState<any>()
+    const [userList, setUserList] = useState<any>()
+    const [currentUser, setCurrentUser] = useState<any>()
+    
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const resCurrentUser = await axios.get("http://127.0.0.1:8080/user/", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+              }
+            });
+            if (resCurrentUser.status === 200) {
+              setCurrentUser(resCurrentUser.data.user);
             }
-        } catch (error) {
-            console.log(error)
-        }
+          } catch (error) {
+            console.log(error);
+          }
+    
+          // Get all channels
+          try {
+            const resListChannels = await axios.get("http://127.0.0.1:8080/channels/", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+              }
+            });
+            if (resListChannels.status === 200) {
+              setChannelList(resListChannels.data.channels);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+    
+          // Get all users
+          try {
+            const resListUsers = await axios.get("http://127.0.0.1:8080/users/", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+              }
+            });
+            if (resListUsers.status === 200) {
+              setUserList(resListUsers.data.users);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
-        // Get all channels
-        try {
-            const resListChannels = await axios.get("http://localhost/channels/")
-            if(resListChannels.status === 200) {
-                setChannelList(resListChannels.data)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-        // Get all users
-        try {
-            const resListUsers = await axios.get("http://localhost/users/")
-            if(resListUsers.status === 200) {
-                setUserList(resListUsers.data)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
     return(
         <>
         <div 
             className="w-full h-screen bg-gradient-to-b from-gray-200 to-black flex flex-col px-2 py-5"
-            onLoad={
-                () => (
-                    handleLoad()
-                )
-            }
         >
             <div className="flex justify-center items-center text-center my-3">
                 <div className="px-3 py-2 border-2 border-gray-500 w-3/12 rounded-lg">{currentUser?.name}</div>
@@ -77,17 +89,18 @@ const Profile = () => {
                                 (channel : Channels) => (
                                     <div className="flex flex-row">
                                         <div 
-                                            className="px-3 py-3 border-2 border-gray-500 rounded-md"
+                                            className="flex px-3 py-2 border-2 border-gray-500 rounded-md w-10/12 cursor-pointer"
                                             onClick={
                                                 () => (
                                                     router.push(`/channel/${channel.id}`)
                                                 )
                                             }
+                                            key={channel.id}
                                         >
                                             {channel.name}
                                         </div>
                                         <div 
-                                            className="mx-3 px-1 bg-yellow-500 border-2 border-yellow-500 rounded-md"
+                                            className="flex mx-3 py-3 px-2 bg-yellow-500 border-2 border-yellow-500 rounded-md cursor-pointer justify-center w-2/12"
                                             onClick={
                                                 () => {
                                                     router.replace(`/channel/edit/${channel.id}`)
@@ -109,10 +122,11 @@ const Profile = () => {
                             userList?.map(
                                 (user : Users) => (
                                     <div 
-                                        className="px-3 py-3 border-2 border-gray-500 rounded-md"
+                                        className="px-3 py-3 mb-3 border-2 border-gray-500 rounded-md cursor-pointer"
                                         onClick={() => (
                                             router.push(`/message/${user.id}`)
                                         )}
+                                        key={user.id}
                                     >
                                         {user.name}
                                     </div>

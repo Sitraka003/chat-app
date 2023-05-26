@@ -1,8 +1,20 @@
+import Users from "@/types/users";
 import { useRouter } from "next/router"
+import { useState } from "react";
 
 const AddMembersToChannel = () => {
     const router = useRouter()
     const {channel_id} = router.query
+    const [showModal, setShowModal] = useState(false);
+    const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+    const [userList, setUserList] = useState<Users[]>()
+    const handleAddMembersClick = () => {
+        setShowModal(true);
+      }
+      
+    const handleCloseModal = () => {
+        setShowModal(false);
+    }
     return(
         <>
         <div className="w-full h-screen bg-gradient-to-b from-gray-200 to-black flex justify-center items-center">
@@ -28,6 +40,9 @@ const AddMembersToChannel = () => {
                 </div>
                 <div 
                     className='mt-3 p-1 rounded-lg border-2 text-center text-white bg-gray-500 border-yellow-500 cursor-pointer'
+                    onClick={
+                        () => (handleAddMembersClick())
+                    }
                 >
                     <p>Add members</p> 
                 </div>
@@ -36,6 +51,35 @@ const AddMembersToChannel = () => {
                 >
                     <p>Continue</p> 
                 </div>
+                {showModal && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            {
+                                userList?.map(
+                                    (user : Users) => (
+                                        <input 
+                                            type="checkbox" 
+                                            value={user.email}
+                                            onClick={
+                                                () => {
+                                                    setSelectedMembers(selectedMembers.concat(user.email))
+                                                }
+                                            }
+                                        />
+                                    )
+                                )
+                            }
+                            <div 
+                                className='mt-3 p-1 rounded-lg border-2 text-center text-white bg-yellow-500 border-yellow-500 cursor-pointer'
+                                onClick={
+                                    () => handleCloseModal()
+                                }
+                            >
+                                <p>Continue</p> 
+                            </div>
+                        </div>
+                    </div>
+                )}
             </form>
         </div>
         </>

@@ -22,10 +22,10 @@ const Login = () => {
 
   const onSubmit = async (data: { email: string; password: string }) => {
     try {
-      const response = await axios.post("http://localhost/users/login", data);
+      const response = await axios.post("http://127.0.0.1:8080/users/login", data)
 
       if (response.status === 200) {
-        const { token } = response.data;
+        const token = response.data.user.token
         localStorage.setItem("token", token);
         router.push("/profile");
       } else {
@@ -34,7 +34,6 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setLoginError("An error occurred while logging in");
     }
   };
 
@@ -43,8 +42,8 @@ const Login = () => {
       <form
         className="flex flex-col border-4 border-gray-500 px-5 py-7 w-3/12 h-54 rounded-lg shadow-2xl"
         onSubmit={handleSubmit(() => onSubmit({
-            email: emaiUser,
-            password: passwordUser
+            "email": emaiUser,
+            "password": passwordUser
         }))}
       >
         <div>
@@ -77,7 +76,17 @@ const Login = () => {
           <button type="submit">Continue</button>
         </div>
         <p className="mt-1">
-          Don't have an account yet <a href="http://localhost:3000/sign-up">Sign in</a>
+          Don't have an account yet: 
+          <span 
+            className="text-blue-500 underline cursor-pointer mx-2"
+            onClick={
+              () => {
+                router.push('/sign-up')
+              }
+            }
+          >
+            Sign up
+          </span>
         </p>
       </form>
     </div>
