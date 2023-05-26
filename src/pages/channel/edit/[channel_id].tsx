@@ -1,6 +1,8 @@
+import Channels from "@/types/channels";
 import Users from "@/types/users";
+import axios from "axios";
 import { useRouter } from "next/router"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AddMembersToChannel = () => {
     const router = useRouter()
@@ -8,6 +10,7 @@ const AddMembersToChannel = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
     const [userList, setUserList] = useState<Users[]>()
+    const [currentChannel, setCurrentChannel] = useState<Channels>()
     const handleAddMembersClick = () => {
         setShowModal(true);
       }
@@ -15,6 +18,25 @@ const AddMembersToChannel = () => {
     const handleCloseModal = () => {
         setShowModal(false);
     }
+    useEffect(() => {
+        const fetchData = async() => {
+            try {
+                const resChannel = await axios.get(`http://127.0.0.1:8080/channel/${channel_id}`,{
+                    headers:{
+                      Authorization:`Bearer ${localStorage.getItem("tokken")}`,
+                      AccessControlAllowOrigin: "http://127.0.0.1:8080"
+                    }
+                  })
+    
+                if(resChannel.status === 200){
+                    setCurrentChannel(resChannel.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        fetchData();
+    },[])
     return(
         <>
         <div className="w-full h-screen bg-gradient-to-b from-gray-200 to-black flex justify-center items-center">

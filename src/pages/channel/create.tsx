@@ -14,8 +14,6 @@ const CreateChannel = () => {
         setShowModal(false);
     }
 
-    const handleCre
-
     useEffect(() => {
         const fetchData = async() => {
             try {
