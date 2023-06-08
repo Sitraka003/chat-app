@@ -1,0 +1,18 @@
+.container{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 75px 1fr;
+    gap: 10px;
+    justify-items: center;
+}
+
+.title {
+    background-color: #595959FF;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    width: calc(30vw + 40px);
+    height: 10vh;
+    border: solid 2px #fff;
+}

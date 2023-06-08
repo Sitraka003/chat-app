@@ -1,0 +1,41 @@
+.form{
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    background-color: #595959FF;
+    gap: 20px;
+    border: solid 2px #fff;
+}
+
+.input{
+    color: #000;
+    background-color: #fff;
+    width: 30vw;
+    height: 10vh;
+    outline: none;
+    border-radius: 10px;
+    padding-left: 15px;
+    border: 0;
+}
+
+.input:focus {
+    background: #cbcbcb;
+}
+
+.button{
+    margin-top: 15px;
+    width: 20vw;
+    height: 8vh;
+    color:rgb(255, 255, 255);
+    font-weight: 100;
+    line-height: 1.1;
+    font-size: 32px;
+    padding: 10px 0;
+    background-color: rgb(19, 22, 219);
+    outline: none;
+    border: 0;
+    border-radius: 10px;
+}
