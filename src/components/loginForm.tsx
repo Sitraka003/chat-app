@@ -1,4 +1,4 @@
-import formStyle from "../styles/form.module.css";
+import formStyle from "../styles/Form.module.css";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {useRouter} from "next/router";
 
@@ -51,7 +51,7 @@ export default function LoginForm() {
                 value={loginData.password}
             />
 
-            <button className={formStyle.button} type="submit">Submit</button>
+            <button className={`${formStyle.button} loginButton`} type="submit">Submit</button>
         </form>
     )
 }

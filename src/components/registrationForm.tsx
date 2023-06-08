@@ -70,7 +70,7 @@ const RegistrationForm = () => {
         value={registrationData.confirmPassword}
       />
 
-      <button className={formStyle.button} type="submit">Submit</button>
+      <button className={`${formStyle.button} registerButton`} type="submit">Register</button>
     </form>
   );
 };
