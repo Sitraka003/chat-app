@@ -1,14 +1,30 @@
+import { updateUserSchema } from "@/schemas"
 import Channels from "@/types/channels"
 import Users from "@/types/users"
+import { yupResolver } from "@hookform/resolvers/yup"
 import axios from "axios"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 
 const Profile = () => {
     const router = useRouter()
     const [channelList, setChannelList] = useState<any>()
     const [userList, setUserList] = useState<any>()
-    const [currentUser, setCurrentUser] = useState<any>()
+    const [currentUser, setCurrentUser] = useState<Users>()
+    const [name, setName] = useState<string>()
+    const [oldPassword, setOldPassword] = useState<string>()
+    const [newPassword, setNewPassword] = useState<string>()
+    const [bio, setBio] = useState<string>()
+    const {
+        register,
+        handleSubmit,
+        formState : { errors }
+    } = useForm(
+        {
+            resolver : yupResolver(updateUserSchema)
+        }
+    )
     
     useEffect(() => {
         const fetchData = async () => {
@@ -20,6 +36,7 @@ const Profile = () => {
             });
             if (resCurrentUser.status === 200) {
               setCurrentUser(resCurrentUser.data.user);
+              console.log(resCurrentUser.data.user)
             }
           } catch (error) {
             console.log(error);
@@ -59,84 +76,91 @@ const Profile = () => {
 
     return(
         <>
-        <div 
-            className="w-full h-screen bg-gradient-to-b from-gray-200 to-black flex flex-col px-2 py-5"
-        >
-            <div className="flex justify-center items-center text-center my-3">
-                <div className="px-3 py-2 border-2 border-gray-500 w-3/12 rounded-lg">{currentUser?.name}</div>
-            </div>
-            <div className="flex justify-center items-center text-center my-2">
-                <div className="px-3 py-2 border-2 border-gray-500 w-3/12 rounded-lg">{currentUser?.email}</div>
-            </div>
-            <div className="flex flex-row justify-center items-center my-2">
-                <div className="flex flex-col w-2/6 mx-5 p-2 border-2 border-gray-500 rounded-md">
-                    <div className="flex flex-row justify-center items-center px-3 py-3">
-                        <div className="text-xl">My channels</div>
-                        <div 
-                            className="mx-3 px-1 bg-yellow-500 border-2 border-yellow-500 rounded-md"
-                            onClick={
-                                () => {
-                                    router.replace('/channel/create')
-                                }
+            <div className="flex flex-row fixed py-3 px-2 w-full h-1/12 bg-yellow-500">
+                <div className="flex w-11/12">
+                    {currentUser?.name}
+                </div>
+                <div className="flex justify-right items-right">
+                    <button 
+                        className="logoutButton"
+                        onClick={
+                            () => {
+                                localStorage.clear()
+                                router.push("/login")
                             }
-                        >
-                            <button>+create</button>
-                        </div>
-                    </div>
-                    <div>
-                        {
-                            channelList?.map(
-                                (channel : Channels) => (
-                                    <div className="flex flex-row">
-                                        <div 
-                                            className="flex px-3 py-2 border-2 border-gray-500 rounded-md w-10/12 cursor-pointer"
-                                            onClick={
-                                                () => (
-                                                    router.push(`/channel/${channel.id}`)
-                                                )
-                                            }
-                                            key={channel.id}
-                                        >
-                                            {channel.name}
-                                        </div>
-                                        <div 
-                                            className="flex mx-3 py-3 px-2 bg-yellow-500 border-2 border-yellow-500 rounded-md cursor-pointer justify-center w-2/12"
-                                            onClick={
-                                                () => {
-                                                    router.replace(`/channel/edit/${channel.id}`)
-                                                }
-                                            }
-                                        >
-                                            <button>edit</button>
-                                        </div>
-                                    </div>
-                                )
-                            )
                         }
-                    </div>
-                </div>
-                <div className="flex flex-col w-2/6 mx-5 p-2 border-2 border-gray-500 rounded-md">
-                    <div className="flex justify-center items-center px-3 py-3 text-xl">My friends</div>
-                    <div>
-                        {
-                            userList?.map(
-                                (user : Users) => (
-                                    <div 
-                                        className="px-3 py-3 mb-3 border-2 border-gray-500 rounded-md cursor-pointer"
-                                        onClick={() => (
-                                            router.push(`/message/${user.id}`)
-                                        )}
-                                        key={user.id}
-                                    >
-                                        {user.name}
-                                    </div>
-                                )
-                            )
-                        }
-                    </div>
+                    >
+                        Logout
+                    </button>
                 </div>
             </div>
-        </div>
+            <div 
+                className="w-full h-screen bg-gradient-to-b from-gray-200 to-black flex flex-col px-2 py-5"
+            >
+                <div className="py-16 px-12">
+                    <form>
+                        <div className="text-yellow-500 text-2xl text-bold text-center mb-2">
+                            <h4>editProfileForm</h4>
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>Name:</label>
+                            <input 
+                                className='rounded-md hover:border-2 hover:border-blue-500'
+                                name="name"
+                                type='text'
+                                value={currentUser?.name}
+                            />
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>Email:</label>
+                            <input 
+                                className='rounded-md hover:border-2 hover:border-blue-500'
+                                name="email"
+                                type='email'
+                                value={currentUser?.email}
+                            />
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>Bio:</label>
+                            <textarea 
+                                className='rounded-md hover:border-2 hover:border-blue-500' 
+                                name="bio"
+                                value={currentUser?.bio}
+                            />
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>currentPassword:</label>
+                            <input 
+                                className='rounded-md hover:border-2 hover:border-blue-500' 
+                                name="currentPassword"
+                                type='password'
+                            />
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>newPassword:</label>
+                            <input 
+                                className='rounded-md hover:border-2 hover:border-blue-500' 
+                                name="newPassword"
+                                type='password'
+                            />
+                        </div>
+                        <div className="flex flex-col mb-1">
+                            <label>confirmPassword:</label>
+                            <input 
+                                className='rounded-md hover:border-2 hover:border-blue-500' 
+                                name="confirmPassword"
+                                type='password'
+                            />
+                        </div>
+                        <button
+                            type="submit" 
+                            className='mt-3 p-1 rounded-lg border-2 text-center text-white bg-yellow-500 border-yellow-500 cursor-pointer updateProfileButton'
+                        >
+                            Update Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
         </>
     )
 }

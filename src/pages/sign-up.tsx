@@ -63,6 +63,7 @@ const Signup = () => {
                                 setUsername(e.target.value)
                             }
                         }
+                        name="name"
                     />
                     {errors.name && <ErrorMessage message={errors.name.message} />}
                 </div>
@@ -77,6 +78,7 @@ const Signup = () => {
                                 setEmail(e.target.value)
                             }
                         }
+                        name="email"
                     />
                     {errors.email && <ErrorMessage message={errors.email.message} />}
                 </div>
@@ -105,6 +107,7 @@ const Signup = () => {
                                 setPassword(e.target.value)
                             }
                         }
+                        name="password"
                     />
                     {errors.password && <ErrorMessage message={errors.password.message} />}
                 </div>
@@ -119,12 +122,13 @@ const Signup = () => {
                                 setConfirmPassword(e.target.value)
                             }
                         }
+                        name="confirmPassword"
                     />
                     {errors.confirmpassword && <ErrorMessage message={errors.confirmpassword.message} />}
                     {password !== confirmPassword && <ErrorMessage message="verify your password"/>}
                 </div>
                 <div className='mt-3 p-1 rounded-lg border-2 text-center text-white bg-yellow-500 border-yellow-500 cursor-pointer'>
-                    <button type="submit">Continue</button> 
+                    <button className="registerButton" type="submit">Register</button> 
                 </div>
             </form>
         </div>
