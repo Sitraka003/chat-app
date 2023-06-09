@@ -26,7 +26,11 @@ const Login = () => {
 
       if (response.status === 200) {
         const token = response.data.user.token
+        const user_id = response.data.user.id
+        const user_name = response.data.user.name
         localStorage.setItem("token", token);
+        localStorage.setItem("user_id", user_id)
+        localStorage.setItem("user_name", user_name)
         router.push("/profile");
       } else {
         setLoginError("Invalid email or password");
@@ -47,7 +51,7 @@ const Login = () => {
         }))}
       >
         <div>
-          <h4 className="text-yellow-500 text-2xl text-bold text-center mb-2">Login</h4>
+          <h4 className="text-yellow-500 text-2xl text-bold text-center mb-2">registrationForm</h4>
         </div>
         <div className="flex flex-col mb-1">
           <label>Email:</label>
@@ -57,6 +61,7 @@ const Login = () => {
             {...register("email")}
             value={emaiUser}
             onChange={(e) => (setEmailUser(e.target.value))}
+            name="email"
           />
           {errors.email && <ErrorMessage message={errors.email.message} />}
         </div>
@@ -68,12 +73,13 @@ const Login = () => {
             {...register("password")}
             value={passwordUser}
             onChange={(e) => (setPasswordlUser(e.target.value))}
+            name="password"
           />
           {errors.password && <ErrorMessage message={errors.password.message} />}
         </div>
         {loginError && <ErrorMessage message={loginError} />}
         <div className="mt-3 p-1 rounded-lg border-2 text-center text-white bg-yellow-500 border-yellow-500 cursor-pointer">
-          <button type="submit">Continue</button>
+          <button className="loginButton" type="submit">Login</button>
         </div>
         <p className="mt-1">
           Don't have an account yet: 

@@ -11,3 +11,11 @@ export const signupSchema = object().shape({
     bio: string(),
     password: string().required("Password is required"),
 })
+
+export const updateUserSchema = object().shape({
+    name: string().required("Name is required"),
+    email: string().email("Invalide email address").required("Email is required"),
+    bio: string(),
+    currentPassword: string().required("enter your current password"),
+    newPassword: string().required("enter your new password"),
+})
